@@ -7,6 +7,8 @@ dotenv.config();
 import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
+import {Pinecone} from '@pinecone-database/pinecone';
+import { PineconeStore } from '@langchain/pinecone';
 
 
 // Constants for chunk size and overlap
@@ -25,11 +27,12 @@ async function indexDocument() {
 
     //2nd step is chunking the documents 
     const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: CHUNK_SIZE, //number of workds in each chunk
-    chunkOverlap: CHUNK_OVERLAP, //number of words that overlap between chunks 
+    chunkSize: chunkSize, //number of workds in each chunk
+    chunkOverlap: chunkOverlap, //number of words that overlap between chunks 
 
   });
   const chunkedDocs = await textSplitter.splitDocuments(rawDocs);
+  console.log("Chunking Completed");
 
   //console.log(chunkedDocs, 'chunkedDocs');
     // Split the documents into smaller chunks
@@ -40,10 +43,19 @@ async function indexDocument() {
         apiKey: process.env.GOOGLE_API_KEY, // Ensure you have set this in your .env file
         model: 'text-embedding-004', // Specify the model you want to use
     });  
+    console.log("Embedding model configured");
 
-    //configure database 
+    //4th configure database 
+    const pinecone = new Pinecone(); // this automatically uses the environment variables set in .env file like PINECONE_API_KEY and PINECONE_ENVIRONMENT 
+    const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX_NAME);
+     console.log("pineconeconfigured");
 
-
+    // langchain pipeline from chunking documents to embeddings
+    await PineconeStore.fromDocuments(chunkedDocs, embeddings, {
+        pineconeIndex,
+        maxConcurrency:5, //what this does is it will run 5 requests at a time to the Pinecone database and it will not wait for the previous request to finish
+    });
+    console.log("data stored completed");
 }
 
 indexDocument();

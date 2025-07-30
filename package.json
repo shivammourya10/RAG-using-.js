@@ -1,14 +1,21 @@
 {
-  "name": "rag_1",
+  "name": "simple_rag_in_js",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shivammourya10/RAG-using-.js.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
+  "bugs": {
+    "url": "https://github.com/shivammourya10/RAG-using-.js/issues"
+  },
+  "homepage": "https://github.com/shivammourya10/RAG-using-.js#readme",
   "description": "",
   "dependencies": {
     "@google/genai": "^1.11.0",
