@@ -31,7 +31,6 @@ const response = await ai.models.generateContent({
 
 
 }
-
 async function chatting(userProblem) {
 
     //convert this userProblem into vector
@@ -99,8 +98,5 @@ async function main(){
    await chatting(userProblem);
    main();
 }
-
-
-
 main();
 
