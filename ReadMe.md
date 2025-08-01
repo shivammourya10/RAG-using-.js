@@ -145,13 +145,13 @@ Here is a visual representation of the project's workflow:
 
 ```mermaid
 graph TD
-    subgraph Document Indexing (index.js)
+    subgraph "Document Indexing (index.js)"
         G[Load PDF] --> H[Chunk PDF]
         H --> I[Embed Chunks]
         I --> J[Store in Pinecone]
     end
 
-    subgraph Chatting (query.js)
+    subgraph "Chatting (query.js)"
         A[User Input] --> B[transformQuery]
         B --> C[Embedding Query]
         C --> D[Pinecone Search]
