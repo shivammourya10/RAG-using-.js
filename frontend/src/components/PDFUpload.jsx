@@ -33,22 +33,25 @@ const PDFUpload = ({ onUpload }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8">
+    <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-8">
       <div className="text-center space-y-4 max-w-2xl">
-        <h1 className="text-4xl md:text-6xl font-bold">
-          Chat with your <span className="text-peach-500">PDF</span>
+        <h1 className="text-2xl md:text-3xl font-semibold leading-tight">
+          <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+            Chat with your PDF
+          </span>
         </h1>
-        <p className="text-xl text-gray-300">
-          Upload any PDF document and ask questions about its content. 
-          Your document stays private and secure - we don't store anything permanently.
+        <p className="text-sm opacity-70 leading-relaxed">
+          Upload any PDF document and ask questions about its content.
+          <br />
+          Your document stays private and secure.
         </p>
       </div>
 
       <div 
-        className={`relative border-2 border-dashed rounded-xl p-12 w-full max-w-md text-center transition-all ${
+        className={`upload-area relative w-full max-w-md transition-all duration-300 ${
           dragActive 
-            ? 'border-peach-500 bg-peach-500/10' 
-            : 'border-gray-600 hover:border-gray-500'
+            ? 'border-purple-400/60 bg-purple-400/10 scale-[1.02]' 
+            : 'border-gray-400/30 hover:border-purple-400/50'
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -64,41 +67,44 @@ const PDFUpload = ({ onUpload }) => {
         />
         
         <div className="space-y-4">
-          <div className="mx-auto w-16 h-16 text-gray-400">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="mx-auto w-12 h-12 opacity-60 transform transition-transform duration-200 hover:scale-110">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-full h-full">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
           </div>
           
           <div>
-            <p className="text-lg font-medium">
-              {dragActive ? 'Drop your PDF here' : 'Drag & drop your PDF'}
+            <p className="text-sm font-medium mb-1">
+              {dragActive ? 'Drop your PDF here' : 'Choose File'}
             </p>
-            <p className="text-gray-400 mt-2">
-              or <span className="text-peach-500 underline cursor-pointer">browse files</span>
+            <p className="text-xs opacity-60">
+              {dragActive ? 'Release to upload' : 'No file chosen'}
             </p>
           </div>
+
+          <button 
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="btn-primary !px-4 !py-2 !text-sm"
+          >
+            Browse Files
+          </button>
         </div>
       </div>
 
-      <div className="text-center space-y-4 max-w-xl">
-        <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
-          <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-          </svg>
-          <span>Session-based processing</span>
-        </div>
-        <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
-          <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-          </svg>
-          <span>No permanent storage</span>
-        </div>
-        <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
-          <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-          </svg>
-          <span>Complete privacy</span>
+      <div className="glass-card p-4 max-w-lg">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+          {[
+            { icon: "🔒", title: "Session-based", desc: "No storage" },
+            { icon: "⚡", title: "Fast", desc: "Instant analysis" },
+            { icon: "🛡️", title: "Private", desc: "Secure data" }
+          ].map((feature) => (
+            <div key={feature.title} className="space-y-1">
+              <div className="text-lg">{feature.icon}</div>
+              <h3 className="text-xs font-medium">{feature.title}</h3>
+              <p className="text-xs opacity-60">{feature.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

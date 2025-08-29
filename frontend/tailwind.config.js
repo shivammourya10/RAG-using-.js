@@ -20,6 +20,9 @@ export default {
           900: '#77361d',
         },
       },
+      fontFamily: {
+        'mono': ['Courier New', 'monospace'],
+      },
     },
   },
   darkMode: 'class',
