@@ -18,11 +18,11 @@ const Navbar = ({ isDarkMode, setIsDarkMode, onReset, onAbout, backendStatus }) 
   };
 
   return (
-    <nav className="nav-glass">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-sm border-b border-white/10">
       <div className="flex justify-between items-center max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center space-x-3">
           <div className="text-lg font-semibold tracking-tight">
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+            <span className="text-white">
               RAGChat
             </span>
           </div>

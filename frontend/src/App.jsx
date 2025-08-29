@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
-import PDFUpload from './components/PDFUpload';
-import ChatInterface from './components/ChatInterface';
+import GeminiChat from './components/GeminiChat';
 import About from './components/About';
 import APIService from './services/api';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [currentPDF, setCurrentPDF] = useState(null);
-  const [isIndexing, setIsIndexing] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
-  const [messages, setMessages] = useState([]);
   const [backendStatus, setBackendStatus] = useState('checking');
 
   // Apply theme to document
@@ -39,58 +35,29 @@ function App() {
 
   const handlePDFUpload = async (file) => {
     try {
-      setCurrentPDF(file);
-      setIsIndexing(true);
-      setMessages([]);
-      
       const result = await APIService.uploadPDF(file);
-      
-      setIsIndexing(false);
-      setMessages([{
-        type: 'system',
-        content: `PDF "${file.name}" has been processed successfully! You can now ask questions about its content.`
-      }]);
-
+      return result;
     } catch (error) {
-      setIsIndexing(false);
-      setMessages([{
-        type: 'error',
-        content: `Failed to process PDF: ${error.message}`
-      }]);
       console.error('Upload error:', error);
+      throw error;
     }
   };
 
   const handleReset = async () => {
     try {
       await APIService.resetSession();
-      setCurrentPDF(null);
-      setMessages([]);
-      setIsIndexing(false);
     } catch (error) {
       console.error('Reset error:', error);
     }
   };
 
   const handleSendMessage = async (message) => {
-    const userMessage = { type: 'user', content: message };
-    setMessages(prev => [...prev, userMessage]);
-    
     try {
       const result = await APIService.sendQuery(message);
-      const botMessage = { 
-        type: 'bot', 
-        content: result.response 
-      };
-      setMessages(prev => [...prev, botMessage]);
-
+      return result.response;
     } catch (error) {
-      const errorMessage = { 
-        type: 'error', 
-        content: `Sorry, I couldn't process your question: ${error.message}` 
-      };
-      setMessages(prev => [...prev, errorMessage]);
       console.error('Query error:', error);
+      throw error;
     }
   };
 
@@ -113,7 +80,7 @@ function App() {
           backendStatus={backendStatus}
         />
         
-        <main className="container mx-auto px-4 py-6 max-w-6xl">
+        <main className="container mx-auto px-4 max-w-6xl">
           {backendStatus === 'disconnected' && (
             <div className="mb-4">
               <div className="glass-card p-3 border-red-500/30 bg-red-500/10 text-sm">
@@ -125,22 +92,11 @@ function App() {
           {showAbout ? (
             <About onClose={() => setShowAbout(false)} />
           ) : (
-            <>
-              {!currentPDF ? (
-                <PDFUpload 
-                  onUpload={handlePDFUpload} 
-                  disabled={backendStatus !== 'connected'}
-                />
-              ) : (
-                <ChatInterface 
-                  pdfName={currentPDF.name}
-                  messages={messages}
-                  isIndexing={isIndexing}
-                  onSendMessage={handleSendMessage}
-                  disabled={backendStatus !== 'connected'}
-                />
-              )}
-            </>
+            <GeminiChat 
+              onFileUpload={handlePDFUpload}
+              onSendMessage={handleSendMessage}
+              backendStatus={backendStatus}
+            />
           )}
         </main>
       </div>

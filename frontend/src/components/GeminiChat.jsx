@@ -128,7 +128,7 @@ const GeminiChat = ({ onFileUpload, onSendMessage, backendStatus }) => {
   };
 
   const renderMessage = (message, index) => {
-    const baseClasses = "p-3 rounded-xl text-sm max-w-[80%]";
+    const baseClasses = "p-3 rounded-xl text-sm max-w-[80%] text-white";
     
     switch (message.type) {
       case 'user':
@@ -185,41 +185,38 @@ const GeminiChat = ({ onFileUpload, onSendMessage, backendStatus }) => {
   };
 
   return (
-    <div className="chat-container">
-      {/* Header with Mirror Reflection Title */}
-      <div className="chat-header">
-        <div className="mirror-title">
-          <div className="text-main">Chat with your PDF</div>
-          <div className="text-reflection" aria-hidden="true">Chat with your PDF</div>
-        </div>
-        <p className="text-sm opacity-70 mt-4">
+    <div className="max-w-4xl mx-auto h-screen flex flex-col pt-16">
+      {/* Floating Background Lines */}
+      <div className="floating-lines">
+        <div className="floating-line"></div>
+        <div className="floating-line"></div>
+        <div className="floating-line"></div>
+        <div className="floating-line"></div>
+        <div className="floating-line"></div>
+        <div className="floating-line"></div>
+      </div>
+
+      {/* Header with Simple Title */}
+      <div className="text-center mb-8 px-6">
+        <h1 className="text-4xl font-semibold text-white mb-2 drop-shadow-lg">
+          Chat with your PDF
+        </h1>
+        <p className="text-gray-400 text-sm">
           Upload a PDF and start asking questions about its content
         </p>
       </div>
 
       {/* Messages Area */}
-      <div className="chat-messages">
-        {messages.length === 0 && (
-          <div className="text-center py-12">
-            <div className="glass-card p-6 max-w-md mx-auto">
-              <h3 className="text-lg font-medium mb-2">Get Started</h3>
-              <p className="text-sm opacity-70 mb-4">Upload a PDF file to begin chatting about its content</p>
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="btn-primary"
-                disabled={backendStatus !== 'connected'}
-              >
-                📄 Upload PDF
-              </button>
-            </div>
-          </div>
-        )}
-
+      <div 
+        className="flex-1 overflow-y-auto px-6 pb-4 space-y-4"
+        onDrop={handleFileDrop}
+        onDragOver={handleDragOver}
+      >
         {messages.map((message, index) => renderMessage(message, index))}
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 mr-12 text-sm border border-white/20">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 mr-12 text-sm border border-white/20 text-white">
               <div className="flex items-center space-x-2">
                 <div className="flex space-x-1">
                   {[0, 1, 2].map((i) => (
@@ -238,7 +235,7 @@ const GeminiChat = ({ onFileUpload, onSendMessage, backendStatus }) => {
 
         {isIndexing && (
           <div className="flex justify-center">
-            <div className="bg-purple-500/20 backdrop-blur-sm rounded-xl p-3 text-sm border border-purple-400/30">
+            <div className="bg-purple-500/20 backdrop-blur-sm rounded-xl p-3 text-sm border border-purple-400/30 text-white">
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 border-2 border-purple-400/30 border-t-purple-400 rounded-full animate-spin"></div>
                 <span className="text-purple-300">Processing PDF...</span>
@@ -250,10 +247,10 @@ const GeminiChat = ({ onFileUpload, onSendMessage, backendStatus }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <div className="chat-input-container">
+      {/* Input Area - Fixed at bottom */}
+      <div className="sticky bottom-0 bg-gray-900/80 backdrop-blur-sm border-t border-white/10 p-4">
         <form onSubmit={handleSubmit}>
-          <div className="glass-card p-3">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-3">
             <div className="flex items-center space-x-3">
               {/* File Upload Button */}
               <button
@@ -277,7 +274,7 @@ const GeminiChat = ({ onFileUpload, onSendMessage, backendStatus }) => {
                   backendStatus !== 'connected' 
                     ? "Please check server connection..." 
                     : !hasUploadedFile 
-                      ? "Upload a PDF first, then ask questions..."
+                      ? "Click 📎 to upload PDF or drag & drop, then ask questions..."
                       : isIndexing
                         ? "Processing PDF..."
                         : "Ask a question about your PDF..."
@@ -292,7 +289,7 @@ const GeminiChat = ({ onFileUpload, onSendMessage, backendStatus }) => {
               <button
                 type="submit"
                 disabled={!inputMessage.trim() || isLoading || backendStatus !== 'connected'}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed !px-4 !py-1.5"
+                className="p-2 rounded-lg bg-white text-black hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
@@ -314,28 +311,6 @@ const GeminiChat = ({ onFileUpload, onSendMessage, backendStatus }) => {
           onChange={handleFileSelect}
           className="hidden"
         />
-
-        {/* Quick Actions */}
-        {messages.length > 0 && hasUploadedFile && !isIndexing && (
-          <div className="mt-3 text-center">
-            <div className="flex flex-wrap justify-center gap-2">
-              {[
-                "What is this document about?",
-                "Summarize the main points",
-                "What are the key findings?"
-              ].map((question) => (
-                <button
-                  key={question}
-                  onClick={() => setInputMessage(question)}
-                  className="btn-secondary !px-3 !py-1.5 text-xs hover:scale-105 transition-all duration-200"
-                  disabled={isLoading}
-                >
-                  {question}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
