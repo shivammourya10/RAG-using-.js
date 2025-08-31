@@ -23,10 +23,13 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // Frontend URL
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.FRONTEND_URL || false
+    : 'http://localhost:5173',
   credentials: true
 }));
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Create uploads directory
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -226,8 +229,48 @@ setInterval(() => {
   }
 }, 60 * 60 * 1000); // Run every hour
 
-app.listen(PORT, () => {
-  console.log(`🚀 RAG Backend server running on port ${PORT}`);
-  console.log(`📄 Frontend URL: http://localhost:5173`);
-  console.log(`🔗 Backend URL: http://localhost:${PORT}`);
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ 
+    error: process.env.NODE_ENV === 'production' 
+      ? 'Internal server error' 
+      : err.message 
+  });
+});
+
+// Handle 404
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  process.exit(0);
+});
+
+const server = app.listen(PORT, '0.0.0.0', () => {
+  const mode = process.env.NODE_ENV || 'development';
+  console.log(`🚀 RAG Backend server running on port ${PORT} in ${mode} mode`);
+  
+  if (mode === 'development') {
+    console.log(`📄 Frontend URL: http://localhost:5173`);
+    console.log(`🔗 Backend URL: http://localhost:${PORT}`);
+  }
+});
+
+// Handle server errors
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use`);
+    process.exit(1);
+  } else {
+    console.error('Server error:', err);
+  }
 });

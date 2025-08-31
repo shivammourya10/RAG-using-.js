@@ -1,33 +1,31 @@
 {
-  "name": "simple_rag_in_js",
+  "name": "ragchat-fullstack",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "A full-stack RAG chat application with React frontend and Node.js backend",
   "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shivammourya10/RAG-using-.js.git"
+  "scripts": {
+    "install-all": "npm run install-frontend && npm run install-backend",
+    "install-frontend": "cd frontend && npm install",
+    "install-backend": "cd backend && npm install",
+    "dev": "concurrently \"npm run dev-backend\" \"npm run dev-frontend\"",
+    "dev-frontend": "cd frontend && npm run dev",
+    "dev-backend": "cd backend && node server.js",
+    "build": "npm run build-frontend",
+    "build-frontend": "cd frontend && npm run build",
+    "start": "cd backend && npm start",
+    "start-production": "NODE_ENV=production npm run start",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "deploy:vercel": "cd frontend && vercel --prod",
+    "deploy:railway": "cd backend && railway up",
+    "deploy:render": "echo 'Connect your GitHub repo to Render dashboard for deployment'"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["rag", "pdf", "chat", "ai", "react", "nodejs"],
+  "author": "Shivam Mourya",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/shivammourya10/RAG-using-.js/issues"
-  },
-  "homepage": "https://github.com/shivammourya10/RAG-using-.js#readme",
-  "description": "",
-  "dependencies": {
-    "@google/genai": "^1.11.0",
-    "@langchain/community": "^0.3.49",
-    "@langchain/core": "^0.3.66",
-    "@langchain/google-genai": "^0.2.16",
-    "@langchain/pinecone": "^0.2.0",
-    "@langchain/textsplitters": "^0.1.0",
-    "@pinecone-database/pinecone": "^5.1.2",
-    "dotenv": "^17.2.1",
-    "pdf-parse": "^1.1.1",
-    "readline-sync": "^1.4.10"
+  "devDependencies": {
+    "concurrently": "^8.2.0"
   }
 }

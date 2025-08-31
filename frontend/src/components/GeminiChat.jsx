@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import config from '../config.js';
 
 const GeminiChat = ({ onFileUpload, onSendMessage, backendStatus }) => {
   const [messages, setMessages] = useState([]);
