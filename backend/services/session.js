@@ -13,11 +13,11 @@ export async function clearSession(sessionId) {
     // Delete all vectors in the session's namespace
     await pineconeIndex.namespace(sessionId).deleteAll();
 
-    console.log(`✅ Session ${sessionId} cleared from Pinecone`);
+    console.log(`Session ${sessionId} cleared from Pinecone`);
     return { success: true };
 
   } catch (error) {
-    console.error(`❌ Error clearing session ${sessionId}:`, error);
+    console.error(`Error clearing session ${sessionId}:`, error);
     throw new Error(`Failed to clear session: ${error.message}`);
   }
 }
@@ -37,7 +37,7 @@ export async function getSessionStats(sessionId) {
     };
 
   } catch (error) {
-    console.error(`❌ Error getting session stats for ${sessionId}:`, error);
+    console.error(`Error getting session stats for ${sessionId}:`, error);
     return {
       sessionId,
       vectorCount: 0,

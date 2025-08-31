@@ -118,11 +118,11 @@ Please try uploading a different PDF file with selectable text content.`;
       }
     }
 
-    console.log(`✅ PDF indexed successfully for session ${sessionId}`);
+    console.log(`PDF indexed successfully for session ${sessionId}`);
     return { success: true, chunks: chunkedDocs.length };
 
   } catch (error) {
-    console.error(`❌ Error indexing PDF for session ${sessionId}:`, error);
+    console.error(`Error indexing PDF for session ${sessionId}:`, error);
     throw new Error(`Failed to index PDF: ${error.message}`);
   }
 }

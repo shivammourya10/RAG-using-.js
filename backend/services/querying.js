@@ -80,11 +80,11 @@ ${context}`,
 
     const answer = response.text || "I apologize, but I couldn't generate a proper response. Please try asking your question differently.";
     
-    console.log(`✅ Query processed successfully for session ${sessionId}`);
+    console.log(`Query processed successfully for session ${sessionId}`);
     return answer;
 
   } catch (error) {
-    console.error(`❌ Error processing query for session ${sessionId}:`, error);
+    console.error(`Error processing query for session ${sessionId}:`, error);
     
     // If it's a quota error, provide a helpful fallback response
     if (error.status === 429 || error.message.includes('Quota exceeded')) {
